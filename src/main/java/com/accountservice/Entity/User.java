@@ -2,10 +2,7 @@ package com.accountservice.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -16,6 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "userDB")
 public class User {
     @NotEmpty
     private String name;

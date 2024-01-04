@@ -1,30 +1,34 @@
 package com.accountservice.Controller;
 
 import com.accountservice.Service.PaymentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping("/api")
+@Controller
 public class PaymentController {
 
 
+    @Autowired
     private PaymentService paymentService;
 
     @GetMapping("/empl/payment")
     public ResponseEntity<?> getPayrolls(){
-        return null;
+        return paymentService.getPayRolls();
     }
 
     @PostMapping("/admin/payments")
-    public ResponseEntity<?> addPayroll(){
-        return null;
+    public ResponseEntity<?> makePayroll(){
+        return paymentService.makePayrolls();
     }
 
     @PutMapping("/acct/payments")
-    public ResponseEntity<?> updatePayroll(){
-        return null;
+    public ResponseEntity<?> updatePaymentInformation(){
+        return paymentService.updatePaymentInformation();
     }
 }

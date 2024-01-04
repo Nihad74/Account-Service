@@ -1,26 +1,23 @@
 package com.accountservice.Service;
-
-import com.accountservice.AccountServiceApplication;
-import com.accountservice.Configuration.SecurityConfig;
 import com.accountservice.Entity.User;
 import com.accountservice.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthenticationService {
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    private SecurityConfig securityConfig;
+    private PasswordEncoder passwordEncoder;
 
     public ResponseEntity<?> signup(User user) {
-        user = securityConfig.updatePassword(user);
+        String password = passwordEncoder.encode(user.getPassword());
+        user.setPassword(password);
         userRepository.save(user);
 
         return ResponseEntity

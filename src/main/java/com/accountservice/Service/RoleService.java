@@ -3,20 +3,16 @@ package com.accountservice.Service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-
 @Service
-public class PaymentService {
-
-    public ResponseEntity<?> getPayRolls(){
+public class RoleService {
+    public ResponseEntity<?> updateUserRole() {
         return null;
     }
 
-
-    public ResponseEntity<?> makePayrolls(){
+    public ResponseEntity<?> deleteUser() {
         return null;
     }
-
-    public ResponseEntity<?> updatePaymentInformation(){
+    public ResponseEntity<?> getUser() {
         return null;
     }
 }
