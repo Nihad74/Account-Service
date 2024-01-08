@@ -1,8 +1,11 @@
 package com.accountservice.Controller;
 
+
 import com.accountservice.Service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +22,9 @@ public class PaymentController {
 
     @GetMapping("/empl/payment")
     public ResponseEntity<?> getPayrolls(){
-        return paymentService.getPayRolls();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName().toLowerCase();
+        return paymentService.getPayRolls(username);
     }
 
     @PostMapping("/admin/payments")

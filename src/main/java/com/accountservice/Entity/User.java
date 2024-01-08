@@ -2,19 +2,30 @@ package com.accountservice.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@JsonPropertyOrder({"id","name", "lastname", "email"})
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "userDB")
+@Table(name = "service_db")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Long id;
+
     @NotEmpty
     private String name;
 
@@ -24,16 +35,23 @@ public class User {
 
     @NotEmpty
     @Email
+    @Column(unique = true)
     @Pattern(regexp ="^[A-Za-z0-9+_.-]+@acme.com$")
     private String email;
 
     @NotEmpty
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @JsonIgnore
-    private Long id;
 
+    @JsonIgnore
+    private String authority;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }

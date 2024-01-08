@@ -1,4 +1,7 @@
 package com.accountservice.Service;
+
+
+import com.accountservice.Configuration.UserExistsException;
 import com.accountservice.Entity.User;
 import com.accountservice.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,9 +18,18 @@ public class AuthenticationService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<?> signup(User user) {
-        String password = passwordEncoder.encode(user.getPassword());
-        user.setPassword(password);
+    public ResponseEntity<?> signup(User request) {
+        //setup User
+        var user = new User();
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setLastName(request.getLastName());
+
+        if(userRepository.findUserByEmailIgnoreCase(user.getEmail()).isPresent()){
+            throw new UserExistsException();
+        }
+        user.setAuthority("ROLE_USER");
         userRepository.save(user);
 
         return ResponseEntity
@@ -25,4 +37,6 @@ public class AuthenticationService {
                 .header("Content-Type", "application/json")
                 .body(user);
     }
+
+
 }
