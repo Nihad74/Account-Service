@@ -23,7 +23,7 @@ public class PaymentController {
     @GetMapping("/empl/payment")
     public ResponseEntity<?> getPayrolls(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName().toLowerCase();
+        String username = auth.getName();
         return paymentService.getPayRolls(username);
     }
 
