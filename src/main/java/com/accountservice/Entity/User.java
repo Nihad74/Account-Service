@@ -1,19 +1,21 @@
-package com.accountservice.Entity;
+package account.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
-@JsonPropertyOrder({"id","name", "lastname", "email"})
+import java.util.ArrayList;
+import java.util.List;
+
+@JsonPropertyOrder({"id","name", "lastname", "email", "roles"})
 
 @Entity
 @AllArgsConstructor
@@ -46,8 +48,16 @@ public class User {
     private String password;
 
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id")
+    @JsonProperty(access= JsonProperty.Access.READ_ONLY)
+    private List<Roles> roles = new ArrayList<>();
+
+    @OneToMany(mappedBy ="user")
     @JsonIgnore
-    private String authority;
+    private List<Salary> salaries = new ArrayList<>();
+
 
     public String getPassword() {
         return password;
@@ -56,4 +66,9 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String toString (){
+        return "Name: " + name + " Lastname: " + lastName + " Email: " + email;
+    }
+
 }

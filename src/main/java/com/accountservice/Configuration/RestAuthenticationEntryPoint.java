@@ -1,4 +1,4 @@
-package com.accountservice.Configuration;
+package account.Configuration;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -8,7 +8,6 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
-
 @Configuration
 public class RestAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override

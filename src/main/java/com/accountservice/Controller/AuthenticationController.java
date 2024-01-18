@@ -1,9 +1,11 @@
-package com.accountservice.Controller;
+package account.Controller;
 
 
-import com.accountservice.Entity.Password;
-import com.accountservice.Service.AuthenticationService;
-import com.accountservice.Entity.User;
+import account.Entity.Password;
+import account.Entity.User;
+import account.Exception.ErrorResponseUtil;
+import account.Exception.PasswordExistsException;
+import account.Service.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,12 +17,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
+
 
 @RequestMapping("/api/auth")
 @Controller
@@ -33,32 +32,22 @@ public class AuthenticationController {
     private Set<String> breachedPasswords;
 
 
+
+
     @PostMapping("/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody User user, BindingResult bindingResult) {
+    public ResponseEntity<?> signup(@Valid @RequestBody User user, BindingResult bindingResult){
         //checks if there are any errors in the request body
-        Map<String, Object> response = new LinkedHashMap<>();
-        response.put("timestamp", LocalDateTime.now().toString());
-        response.put("status", HttpStatus.BAD_REQUEST.value());
-        response.put("error", "Bad Request");
-
-        if (bindingResult.hasErrors()) {
+        if(bindingResult.hasErrors()){
             String error = bindingResult.getFieldError().getDefaultMessage();
-
-            response.put("message", error);
-            response.put("path", "/api/auth/signup");
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
-                    .header("Content-Type", "application/json")
-                    .body(response);
+                    .body(ErrorResponseUtil.createErrorResponse(HttpStatus.BAD_REQUEST, error, "/api/auth/signup"));
         }
+
         String password = user.getPassword();
-        if (breachedPasswords.contains(password)) {
-            response.put("message", "The password is in the hacker's database!");
-            response.put("path", "/api/auth/signup");
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .header("Content-Type", "application/json")
-                    .body(response);
+
+        if(breachedPasswords.contains(password)){
+            throw new PasswordExistsException();
         }
 
 
@@ -66,9 +55,10 @@ public class AuthenticationController {
     }
 
     @PostMapping("/changepass")
-    public ResponseEntity<?> changePassword(@RequestBody Password new_password) {
+    public ResponseEntity<?> changePassword(@RequestBody Password new_password){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         return authenticationService.changePassword(username, new_password.getNew_password());
     }
+
 }

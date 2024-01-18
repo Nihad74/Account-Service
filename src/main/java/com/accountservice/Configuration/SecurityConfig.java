@@ -1,17 +1,18 @@
-package com.accountservice.Configuration;
+package account.Configuration;
 
-import com.accountservice.Entity.BreachedPassword;
-import com.accountservice.Repository.BreachedPasswordsRepository;
+import account.Entity.BreachedPassword;
+import account.Repository.BreachedPasswordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 
 import java.util.Set;
 
@@ -25,8 +26,8 @@ public class SecurityConfig  {
 
     private final Set<String> breachedPassword = Set.of
             ("PasswordForJanuary", "PasswordForFebruary", "PasswordForMarch", "PasswordForApril",
-                    "PasswordForMay", "PasswordForJune", "PasswordForJuly", "PasswordForAugust",
-                    "PasswordForSeptember", "PasswordForOctober", "PasswordForNovember", "PasswordForDecember");
+            "PasswordForMay", "PasswordForJune", "PasswordForJuly", "PasswordForAugust",
+            "PasswordForSeptember", "PasswordForOctober", "PasswordForNovember", "PasswordForDecember");
 
 
     @Bean
@@ -40,21 +41,37 @@ public class SecurityConfig  {
                 .csrf(cfg -> cfg.disable())
                 .headers(cfg -> cfg.frameOptions().disable())
                 .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers("/api/empl/payment").hasAnyRole("USER", "ADMIN", "ACCOUNTANT")
-                                .requestMatchers("/api/auth/changepass").hasAnyRole("USER", "ADMIN", "ACCOUNTANT")
-                                .requestMatchers("/api/acct/payment").hasRole("ACCOUNTANT")
-                                .requestMatchers("/api/admin/*").hasRole("ADMIN")
-                                .anyRequest().permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/auth/changepass").hasAnyAuthority("ROLE_USER", "ROLE_ADMINISTRATOR", "ROLE_ACCOUNTANT")
+                        .requestMatchers(HttpMethod.GET, "/api/empl/payment").hasAnyAuthority("ROLE_USER", "ROLE_ACCOUNTANT")
+                        .requestMatchers( "/api/acct/payments").hasAnyAuthority("ROLE_ACCOUNTANT")
+                        .requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMINISTRATOR")
+                        .anyRequest().permitAll()
 
                 )
                 .httpBasic(Customizer.withDefaults())
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(restAuthenticationEntryPoint))
+                        .authenticationEntryPoint(restAuthenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler()))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
 
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler(){
+        return new CustomAccessDeniedHandler();
+    }
+
+
+    @Bean
+    public void fillBreachedRepository(){
+        for (String password : breachedPassword) {
+            if(breachedPasswordsRepository.existsByPassword(password)){
+                continue;
+            }
+            breachedPasswordsRepository.save(new BreachedPassword(password));
+        }
+    }
 
     @Bean
     public Set<String> getBreachedPasswords(){

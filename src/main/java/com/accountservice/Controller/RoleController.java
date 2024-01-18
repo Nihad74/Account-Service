@@ -1,13 +1,17 @@
-package com.accountservice.Controller;
+package account.Controller;
 
-import com.accountservice.Service.RoleService;
+import account.Exception.ErrorResponseUtil;
+import account.Service.RoleService;
+import account.api.UpdateRole;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @RequestMapping("/api/admin")
 @Controller
@@ -18,17 +22,24 @@ public class RoleController {
     private RoleService roleService;
 
     @PutMapping("/user/role")
-    public ResponseEntity<?> updateUserRole(){
-        return roleService.updateUserRole();
+    public ResponseEntity<?> updateUserRole(@RequestBody @Valid UpdateRole updateRole, BindingResult result){
+        if(result.hasErrors()){
+            return ResponseEntity
+                    .badRequest()
+                    .body(ErrorResponseUtil.createErrorResponse(HttpStatus.BAD_REQUEST,
+                            Objects.requireNonNull(result.getFieldError()).toString(), "/api/admin/user/role"));
+        }
+
+        return roleService.updateUserRole(updateRole);
     }
 
 
-    @DeleteMapping("/user")
-    public ResponseEntity<?> deleteUser(){
-        return roleService.deleteUser();
+    @DeleteMapping("/user/{email}")
+    public ResponseEntity<?> deleteUser(@PathVariable("email") String email){
+        return roleService.deleteUser(email);
     }
 
-    @GetMapping("/user")
+    @GetMapping("/user/")
     public ResponseEntity<?> getUser(){
         return roleService.getUser();
     }
