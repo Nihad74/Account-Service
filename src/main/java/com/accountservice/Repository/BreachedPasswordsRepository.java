@@ -1,6 +1,6 @@
-package account.Repository;
+package com.accountservice.Repository;
 
-import account.Entity.BreachedPassword;
+import com.accountservice.Entity.BreachedPassword;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BreachedPasswordsRepository extends JpaRepository<BreachedPassword, Long> {

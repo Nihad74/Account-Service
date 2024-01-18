@@ -1,6 +1,6 @@
-package account.Repository;
+package com.accountservice.Repository;
 
-import account.Entity.Salary;
+import com.accountservice.Entity.Salary;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

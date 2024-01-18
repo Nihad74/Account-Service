@@ -1,11 +1,10 @@
-package account.Service;
+package com.accountservice.Service;
 
-import account.Entity.Roles;
-import account.Entity.User;
-import account.Repository.UserRepository;
-import account.api.Role;
-import account.api.UpdateRole;
-import account.api.UserDTO;
+import com.accountservice.Entity.Roles;
+import com.accountservice.Entity.User;
+import com.accountservice.Repository.UserRepository;
+import com.accountservice.api.UpdateRole;
+import com.accountservice.api.UserDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,7 +14,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class RoleService {

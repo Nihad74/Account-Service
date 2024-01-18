@@ -1,13 +1,13 @@
-package account.Service;
+package com.accountservice.Service;
 
-import account.Entity.Salary;
-import account.Entity.User;
-import account.Entity.UserAdapter;
-import account.Exception.ErrorResponseUtil;
-import account.Exception.PasswordExistsException;
-import account.Repository.BreachedPasswordsRepository;
-import account.Repository.SalaryRepository;
-import account.Repository.UserRepository;
+import com.accountservice.Entity.Salary;
+import com.accountservice.Entity.User;
+import com.accountservice.Entity.UserAdapter;
+import com.accountservice.Exception.ErrorResponseUtil;
+import com.accountservice.Exception.PasswordExistsException;
+import com.accountservice.Repository.BreachedPasswordsRepository;
+import com.accountservice.Repository.SalaryRepository;
+import com.accountservice.Repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +19,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.swing.text.html.Option;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j

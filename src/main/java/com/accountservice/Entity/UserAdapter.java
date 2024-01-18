@@ -1,4 +1,4 @@
-package account.Entity;
+package com.accountservice.Entity;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;

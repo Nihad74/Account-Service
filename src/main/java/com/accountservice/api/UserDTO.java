@@ -1,13 +1,11 @@
-package account.api;
+package com.accountservice.api;
 
-import account.Entity.Roles;
-import account.Entity.User;
-import lombok.AllArgsConstructor;
+import com.accountservice.Entity.Roles;
+import com.accountservice.Entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;

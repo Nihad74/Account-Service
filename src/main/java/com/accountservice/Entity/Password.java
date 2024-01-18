@@ -1,4 +1,4 @@
-package account.Entity;
+package com.accountservice.Entity;
 
 public class Password {
     private String new_password;

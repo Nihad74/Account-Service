@@ -1,4 +1,4 @@
-package account.Exception;
+package com.accountservice.Exception;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

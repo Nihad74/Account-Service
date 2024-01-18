@@ -1,10 +1,9 @@
-package account.Controller;
+package com.accountservice.Controller;
 
-import account.Entity.Salary;
-import account.Service.PaymentService;
+import com.accountservice.Entity.Salary;
+import com.accountservice.Service.PaymentService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import jakarta.validation.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

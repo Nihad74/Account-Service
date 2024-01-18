@@ -1,20 +1,17 @@
-package account.Entity;
+package com.accountservice.Entity;
 
-import account.Configuration.CustomSalarySerializer;
-import account.Configuration.CustomYearMonthDeserializer;
-import account.Configuration.CustomYearMonthSerializer;
+import com.accountservice.Configuration.CustomSalarySerializer;
+import com.accountservice.Configuration.CustomYearMonthDeserializer;
+import com.accountservice.Configuration.CustomYearMonthSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.YearMonthDeserializer;
-import com.fasterxml.jackson.datatype.jsr310.ser.YearMonthSerializer;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import lombok.Generated;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;

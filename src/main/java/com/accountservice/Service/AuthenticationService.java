@@ -1,14 +1,13 @@
-package account.Service;
+package com.accountservice.Service;
 
 
-import account.Entity.Roles;
-import account.Exception.ErrorResponseUtil;
-import account.Exception.SamePasswordException;
-
-import account.Entity.User;
-import account.Entity.UserAdapter;
-import account.Repository.UserRepository;
-import account.api.UserDTO;
+import com.accountservice.Entity.Roles;
+import com.accountservice.Entity.User;
+import com.accountservice.Entity.UserAdapter;
+import com.accountservice.Exception.ErrorResponseUtil;
+import com.accountservice.Exception.SamePasswordException;
+import com.accountservice.Repository.UserRepository;
+import com.accountservice.api.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

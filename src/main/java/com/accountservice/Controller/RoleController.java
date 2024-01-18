@@ -1,8 +1,8 @@
-package account.Controller;
+package com.accountservice.Controller;
 
-import account.Exception.ErrorResponseUtil;
-import account.Service.RoleService;
-import account.api.UpdateRole;
+import com.accountservice.Exception.ErrorResponseUtil;
+import com.accountservice.Service.RoleService;
+import com.accountservice.api.UpdateRole;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,4 +1,4 @@
-package account.Configuration;
+package com.accountservice.Configuration;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

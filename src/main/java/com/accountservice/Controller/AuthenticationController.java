@@ -1,11 +1,9 @@
-package account.Controller;
-
-
-import account.Entity.Password;
-import account.Entity.User;
-import account.Exception.ErrorResponseUtil;
-import account.Exception.PasswordExistsException;
-import account.Service.AuthenticationService;
+package com.accountservice.Controller;
+import com.accountservice.Entity.Password;
+import com.accountservice.Entity.User;
+import com.accountservice.Exception.ErrorResponseUtil;
+import com.accountservice.Exception.PasswordExistsException;
+import com.accountservice.Service.AuthenticationService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

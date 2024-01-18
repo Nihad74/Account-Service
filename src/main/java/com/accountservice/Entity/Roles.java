@@ -1,6 +1,7 @@
-package account.Entity;
+package com.accountservice.Entity;
 
-import account.api.Role;
+
+import com.accountservice.api.Role;
 import jakarta.persistence.*;
 
 @Entity

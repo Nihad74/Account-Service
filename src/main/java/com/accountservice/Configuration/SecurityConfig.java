@@ -1,7 +1,6 @@
-package account.Configuration;
+package com.accountservice.Configuration;
 
-import account.Entity.BreachedPassword;
-import account.Repository.BreachedPasswordsRepository;
+import com.accountservice.Repository.BreachedPasswordsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,17 +59,6 @@ public class SecurityConfig  {
     @Bean
     public AccessDeniedHandler accessDeniedHandler(){
         return new CustomAccessDeniedHandler();
-    }
-
-
-    @Bean
-    public void fillBreachedRepository(){
-        for (String password : breachedPassword) {
-            if(breachedPasswordsRepository.existsByPassword(password)){
-                continue;
-            }
-            breachedPasswordsRepository.save(new BreachedPassword(password));
-        }
     }
 
     @Bean
