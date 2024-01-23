@@ -12,6 +12,7 @@ Account Service is a secure and robust Spring Boot application that utilizes Spr
 - API Endpoints and Access Control
 - The service defines several RESTful endpoints, each requiring specific roles for access:
 
+## Endpoints 
 - POST /api/auth/signup: Open for all users for self-registration.
 - POST /api/auth/changepass: For authenticated users to change their password.
 - GET /api/empl/payment: For users and accountants to view payment info.
