@@ -68,6 +68,7 @@ Response:
 
 ## Salary Management
 For accountants to add salary information:
+```
 POST /api/acct/payments
 [
     {
@@ -77,27 +78,31 @@ POST /api/acct/payments
     }
     // More entries...
 ]
-
+```
 Response:
+```
 {
    "status": "Added successfully!"
 }
+```
 
 To update salary information:
+```
 PUT /api/acct/payments
 {
     "employee": "useremail@acme.com",
     "period": "01-2021",
     "salary": 123457
 }
-
+```
 Response:
+```
 {
    "status": "Updated successfully!"
 }
-
+```
 ## Viewing Payment Information
-
+```
 GET /api/empl/payment?period=mm-YYYY
 
 Response with specified period:
@@ -107,23 +112,26 @@ Response with specified period:
    "period": "January-2021",
    "salary": "1234 dollar(s) 56 cent(s)"
 }
-
+```
 Or, without specifying a period to get all payments for the employee:
+```
 [
     // All payment entries of logged in user...
 ]
 
-
+```
 ## User Role Management
 For administrators to update user roles:
+```
 PUT /api/admin/user/role
 {
    "user": "useremail@acme.com",
    "role": "ACCOUNTANT",
    "operation": "GRANT"
 }
-
+```
 Response:
+```
 {
     "id": 2,
     "name": "Ivan",
@@ -131,9 +139,10 @@ Response:
     "email": "ivanivanov@acme.com",
     "roles": ["ROLE_ACCOUNTANT", "ROLE_USER"]
 }
-
+```
 ## User Deletion
 For administrators to delete a user:
+```
 DELETE /api/admin/user/{email}
 
 Response:
@@ -141,23 +150,29 @@ Response:
     "user": "useremail@acme.com",
     "status": "Deleted successfully!"
 }
-
+```
 ## Security Events Logging
 Auditors can access logged security events:
+```
 GET /api/security/events
-
+```
 Logged Events: 
+
 ![image](https://github.com/Nihad74/Account-Service/assets/113698778/eda34fa4-4f8c-4d45-93eb-d57c7cad7426)
 
 Response : 
+```
 [
    // list of logged events 
 ]
+```
 
 ## Locking Mechanism
 If a user fails to login 5 times, the account is locked. An administrator can unlock the user:
+```
 PUT /api/admin/user/access
 {
    "user": "useremail@acme.com",
    "operation": "UNLOCK"
 }
+```
