@@ -1,4 +1,4 @@
-# Account Service - GitHub Project ReadMe
+# Account Service
 ## Overview
 Account Service is a secure and robust Spring Boot application that utilizes Spring Security to manage user accounts, authentication, and role-based access control. With a range of endpoints catering to different user roles, Account Service ensures sensitive operations like payment processing, user management, and security event logging are securely handled.
 
