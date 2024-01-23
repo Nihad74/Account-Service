@@ -24,6 +24,7 @@ Account Service is a secure and robust Spring Boot application that utilizes Spr
 
 ## User Registration
 To register a new user:
+```
 POST /api/auth/signup
 {
    "name": "John",
@@ -31,6 +32,7 @@ POST /api/auth/signup
    "email": "johndoe@acme.com",
    "password": "secret"
 }
+````
 Requirements:
 
 - Email is the username.
@@ -38,6 +40,7 @@ Requirements:
 - Passwords must be at least 12 characters long.
 
 Response:
+```
 {
     "id": 1,
     "name": "John",
@@ -45,18 +48,23 @@ Response:
     "email": "johndoe@acme.com",
     "roles": ["ROLE_ADMINISTRATOR"]
 }
+```
 
 ## Password Change
 For changing user password after login:
+```
 POST /api/auth/changepass
 {
     "new_password": "newSecurePassword2024!!!"
 }
+```
 Response:
+```
 {
     "email": "useremail@acme.com",
     "status": "The password has been updated successfully"
 }
+```
 
 ## Salary Management
 For accountants to add salary information:
