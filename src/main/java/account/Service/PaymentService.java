@@ -23,12 +23,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Slf4j
 @Service("paymentService")
 public class PaymentService implements UserDetailsService {
 
+
+    // Rethink these Autowired, are they really needed?
     @Autowired
     private UserRepository userRepository;
 
@@ -36,17 +40,17 @@ public class PaymentService implements UserDetailsService {
     private SalaryRepository salaryRepository;
 
 
-    public ResponseEntity<?> getPayRolls(String username, String period){
+    public ResponseEntity<?> getPayRolls(final String username, final String period) {
 
         if (period != null) {
             return getPayRollForPeriod(username, period);
         }
 
-        List<Salary> salaries = salaryRepository.findAllByEmployeeOrderByDateDateDesc(username);
-        List<Map<String, Object>> response = salaries.stream()
+        // Maybe consider a Comparator or smth like that to establish a specific order
+        final List<Salary> salaries = salaryRepository.findAllByEmployeeOrderByDateDateDesc(username);
+        final List<Map<String, Object>> response = salaries.stream()
                 .map(salary -> createResponseMap(username, Optional.of(salary)))
                 .collect(Collectors.toList());
-
 
         return ResponseEntity
                 .status(200)
@@ -55,15 +59,15 @@ public class PaymentService implements UserDetailsService {
     }
 
     @Transactional
-    public ResponseEntity<?> uploadPayment(List<Salary> salaries){
+    public ResponseEntity<?> uploadPayment(final List<Salary> salaries) {
 
-        salaries.forEach(salary ->{
-            String email = salary.getEmployee();
-            User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(RuntimeException::new);
+        salaries.forEach(salary -> {
+            final String email = salary.getEmployee();
+            final User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(RuntimeException::new);
             salary.setEmployee(user.getEmail());
         });
 
-        if(!areDatesInAscendingOrder(salaries)){
+        if (!areDatesInAscendingOrder(salaries)) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(ErrorResponseUtil.createErrorResponse
@@ -71,21 +75,20 @@ public class PaymentService implements UserDetailsService {
                                     "/api/acct/payments"));
         }
 
-
         salaryRepository.saveAll(salaries);
         return ResponseEntity
                 .status(200)
                 .body(Map.of("status", "Added successfully!"));
     }
+
     @Transactional
-    public ResponseEntity<?> updatePaymentInformation(Salary salary){
+    public ResponseEntity<?> updatePaymentInformation(final Salary salary) {
 
         log.error(salaryRepository.findAll().toString());
-        String email  = salary.getEmployee();
+        final String email = salary.getEmployee();
 
-        User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(RuntimeException::new);
+        final User user = userRepository.findUserByEmailIgnoreCase(email).orElseThrow(RuntimeException::new);
         salaryRepository.updateSalariesByEmployeeAndDate(user.getEmail(), salary.getDate(), salary.getSalary());
-
 
         return ResponseEntity
                 .status(200)
@@ -93,33 +96,32 @@ public class PaymentService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
+        final User user = userRepository
                 .findUserByEmailIgnoreCase(username)
                 .orElseThrow(() -> new UsernameNotFoundException(""));
         return new UserAdapter(user);
     }
 
 
-    public boolean areDatesInAscendingOrder(List<Salary> salaries) {
-        for(int i = 0; i < salaries.size() - 1; i++){
-            if(salaries.get(i).getEmployee().equals(salaries.get(i+1).getEmployee())){
-                if(salaries.get(i).getDate().isAfter(salaries.get(i+1).getDate()) ||
-                        salaries.get(i).getDate().equals(salaries.get(i+1).getDate())){
-                    return false;
-                }
-            }
-        }
-        return true;
+    public boolean areDatesInAscendingOrder(final List<Salary> salaries) {
+        // Break up logic into predicates!
+        final Predicate<Integer> isSameEmployee = i -> salaries.get(i).getEmployee().equals(salaries.get(i + 1).getEmployee());
+        final Predicate<Integer> dateIsEqualOrAfter = i -> salaries.get(i).getDate().isAfter(salaries.get(i + 1).getDate()) || salaries.get(i).getDate().equals(salaries.get(i + 1).getDate());
+        final Predicate<Integer> areDatesInDescendingOrder = isSameEmployee.and(dateIsEqualOrAfter);
+
+        return IntStream.range(0, salaries.size() - 1).noneMatch(areDatesInDescendingOrder::test);
     }
 
-    private ResponseEntity<?> getPayRollForPeriod(String username, String period) {
+    private ResponseEntity<?> getPayRollForPeriod(final String username, final String period) {
+        // this seems excessive
+
         return Optional.of(period)
                 .map(p -> {
-                    try{
+                    try {
                         return YearMonth.parse(p, DateTimeFormatter.ofPattern("MM-yyyy"));
                     } catch (Exception e) {
-                       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong date format!");
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Wrong date format!");
                     }
                 })
                 .map(yearMonth -> salaryRepository.findByEmployeeAndDate(username, yearMonth))
@@ -135,15 +137,15 @@ public class PaymentService implements UserDetailsService {
                                         "/api/empl/payment")));
     }
 
-    private Map<String, Object> createResponseMap(String username, Optional<Salary> salary) {
-        Salary salary1 = salary.orElseThrow(RuntimeException::new);
-        User user = userRepository.findUserByEmailIgnoreCase(username).orElseThrow(RuntimeException::new);
+    private Map<String, Object> createResponseMap(final String username, final Optional<Salary> salaryOpt) {
+        final Salary salary = salaryOpt.orElseThrow(RuntimeException::new);
+        final User user = userRepository.findUserByEmailIgnoreCase(username).orElseThrow(RuntimeException::new);
 
-        Map<String, Object> response = new LinkedHashMap<>();
+        final Map<String, Object> response = new LinkedHashMap<>();
         response.put("name", user.getName());
         response.put("lastname", user.getLastName());
-        response.put("period", salary1.getDate().format(DateTimeFormatter.ofPattern("MMMM-yyyy")));
-        response.put("salary", salary1.getSalary() / 100 + " dollar(s) " + salary1.getSalary() % 100 + " cent(s)");
+        response.put("period", salary.getDate().format(DateTimeFormatter.ofPattern("MMMM-yyyy")));
+        response.put("salary", salary.getSalary() / 100 + " dollar(s) " + salary.getSalary() % 100 + " cent(s)");
 
         return response;
     }
