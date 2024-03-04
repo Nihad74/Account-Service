@@ -46,7 +46,7 @@ public class PaymentService implements UserDetailsService {
             return getPayRollForPeriod(username, period);
         }
 
-        // Maybe consider a Comparator or smth like that to establish a specific order
+        
         final List<Salary> salaries = salaryRepository.findAllByEmployeeOrderByDateDateDesc(username);
         final List<Map<String, Object>> response = salaries.stream()
                 .map(salary -> createResponseMap(username, Optional.of(salary)))
@@ -105,7 +105,7 @@ public class PaymentService implements UserDetailsService {
 
 
     public boolean areDatesInAscendingOrder(final List<Salary> salaries) {
-        // Break up logic into predicates!
+       
         final Predicate<Integer> isSameEmployee = i -> salaries.get(i).getEmployee().equals(salaries.get(i + 1).getEmployee());
         final Predicate<Integer> dateIsEqualOrAfter = i -> salaries.get(i).getDate().isAfter(salaries.get(i + 1).getDate()) || salaries.get(i).getDate().equals(salaries.get(i + 1).getDate());
         final Predicate<Integer> areDatesInDescendingOrder = isSameEmployee.and(dateIsEqualOrAfter);
@@ -114,7 +114,7 @@ public class PaymentService implements UserDetailsService {
     }
 
     private ResponseEntity<?> getPayRollForPeriod(final String username, final String period) {
-        // this seems excessive
+        
 
         return Optional.of(period)
                 .map(p -> {
