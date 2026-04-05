@@ -4,14 +4,27 @@ import {useState, type SubmitEvent} from "react";
 function App() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  //const [error, setError] = useState("")
-  //const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState("")
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   function handleSubmit(e: SubmitEvent<HTMLFormElement>){
       e.preventDefault()
 
-      console.log("Email: ", email)
-      console.log("Password: ", password)
+      setError("")
+
+      if(email === "" || password === ""){
+          setError("Please fill in all fields.")
+          return
+      }
+
+      setIsSubmitting(true)
+
+      // login failed
+      setError("Invalid email or password.")
+      setIsSubmitting(false)
+      setTimeout(() => setError(""), 3000)
+      return
+
 
   }
 
@@ -30,9 +43,12 @@ function App() {
                     <input type="password" placeholder={"********"} value={password} id={"password"}
                     onChange = {(e) => setPassword(e.target.value)}/>
                 </div>
-            <button className="login-button" type={"submit"}>LOG IN</button>
+                <div className={"error-container"}>
+                    {error !== "" && <p className={"error-message"}>⚠️ {error}</p>}
+                </div>
+            <button className="login-button" type={"submit"} disabled={isSubmitting}>LOG IN</button>
             </form>
-            <a className={"forgot-password"} href={"/forgot-password"}>Forgot your Password?</a>
+            <a className={"forgot-password"} href={"#"}>Forgot your Password?</a>
         </div>
       </main>
   )
