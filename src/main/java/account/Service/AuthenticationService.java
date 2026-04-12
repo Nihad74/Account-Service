@@ -9,6 +9,7 @@ import account.Exception.ErrorResponseUtil;
 import account.Exception.SamePasswordException;
 import account.Repository.SecurityEventRepository;
 import account.Repository.UserRepository;
+import account.api.AuthenticationUserResponse;
 import account.api.UserDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @Service("authenticationService")
@@ -115,5 +113,21 @@ public class AuthenticationService{
     }
 
 
+    public ResponseEntity<?> getAuthenticatedUser(String email) {
+        Optional<User> user = userRepository.findUserByEmailIgnoreCase(email);
 
+        if(user.isPresent()){
+            AuthenticationUserResponse userResponse = new AuthenticationUserResponse(user.get());
+            return ResponseEntity
+                    .status(200)
+                    .header("Content-Type", "application/json")
+                    .body(userResponse);
+        }else {
+            return ResponseEntity
+                    .status(404)
+                    .body(ErrorResponseUtil.createErrorResponse(
+                            HttpStatus.NOT_FOUND, "User not found!", "/api/auth/me"
+                    ));
+        }
+    }
 }
