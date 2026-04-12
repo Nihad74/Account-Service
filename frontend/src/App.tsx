@@ -7,9 +7,8 @@ function App() {
   const [error, setError] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  function handleSubmit(e: SubmitEvent<HTMLFormElement>){
+  async function handleSubmit(e: SubmitEvent<HTMLFormElement>){
       e.preventDefault()
-
       setError("")
 
       if(email === "" || password === ""){
@@ -19,12 +18,28 @@ function App() {
 
       setIsSubmitting(true)
 
-      // login failed
-      setError("Invalid email or password.")
-      setIsSubmitting(false)
-      setTimeout(() => setError(""), 3000)
-      return
+      try{
+          const response = await fetch("http://localhost:8080/api/auth/me", {
+              method: "GET",
+              headers: {
+                  "Authorization": "Basic " + btoa(email + ":" + password),
+              }
+          })
 
+          if(!response.ok){
+              // login failed
+              setError("Invalid email or password.")
+              return
+          } else {
+              const result = await response.json()
+              console.log(result)
+          }
+
+      }catch(error){
+          console.error(error)
+      }finally {
+          setIsSubmitting(false)
+      }
 
   }
 

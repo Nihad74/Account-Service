@@ -71,10 +71,6 @@ public class User {
     private int failedLoginAttempts;
 
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String toString (){
         return "Name: " + name + " Lastname: " + lastName + " Email: " + email + " Role " + roles.toString();
     }
