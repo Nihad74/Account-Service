@@ -1,4 +1,5 @@
 import {useState} from "react";
+import { useNavigate } from "react-router-dom";
 import '../App.css'
 import type {SubmitEvent} from "react";
 
@@ -7,6 +8,7 @@ function LoginPage() {
     const [password, setPassword] = useState("")
     const [error, setError] = useState("")
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const navigate = useNavigate()
 
     async function handleSubmit(e: SubmitEvent<HTMLFormElement>){
         e.preventDefault()
@@ -33,7 +35,15 @@ function LoginPage() {
                 return
             } else {
                 const result = await response.json()
-                console.log(result)
+                if(result.roles.includes("ROLE_ADMINISTRATOR")){
+                    navigate("/admin")
+                } else if(result.roles.includes("ROLE_ACCOUNTANT")){
+                    navigate("/accountant")
+                } else if(result.roles.includes("ROLE_USER")){
+                    navigate("/employee")
+                } else if(result.roles.includes("ROLE_AUDITOR")){
+                    navigate("/auditor")
+                }
             }
 
         }catch(error){
