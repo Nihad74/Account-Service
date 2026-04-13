@@ -46,8 +46,8 @@ function LoginPage() {
                 }
             }
 
-        }catch(error){
-            console.error(error)
+        }catch(err){
+            setError("Could not reach the server. Please try again.")
         }finally {
             setIsSubmitting(false)
         }
