@@ -1,72 +1,20 @@
-import './App.css'
-import {useState, type SubmitEvent} from "react";
+import {Route, Routes} from "react-router-dom";
+import LoginPage from "./pages/LoginPage.tsx";
+import AdminPage from "./pages/AdminPage.tsx";
+import AccountantPage from "./pages/AccountantPage.tsx";
+import EmployeePage from "./pages/EmployeePage.tsx";
+import AuditorPage from "./pages/AuditorPage.tsx";
 
 function App() {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
-  const [isSubmitting, setIsSubmitting] = useState(false)
-
-  async function handleSubmit(e: SubmitEvent<HTMLFormElement>){
-      e.preventDefault()
-      setError("")
-
-      if(email === "" || password === ""){
-          setError("Please fill in all fields.")
-          return
-      }
-
-      setIsSubmitting(true)
-
-      try{
-          const response = await fetch("http://localhost:8080/api/auth/me", {
-              method: "GET",
-              headers: {
-                  "Authorization": "Basic " + btoa(email + ":" + password),
-              }
-          })
-
-          if(!response.ok){
-              // login failed
-              setError("Invalid email or password.")
-              return
-          } else {
-              const result = await response.json()
-              console.log(result)
-          }
-
-      }catch(error){
-          console.error(error)
-      }finally {
-          setIsSubmitting(false)
-      }
-
-  }
-
-  return (
-      <main className={"login-page"}>
-        <div className={"login-card"}>
-          <h1>LOG IN TO YOUR ACCOUNT</h1>
-            <form className={"login-form"} onSubmit={handleSubmit}>
-                <div className={"input-group"}>
-                    <label htmlFor={"email"}>Email</label>
-                    <input type="email" placeholder={"Enter your email"} value={email} id={"email"}
-                    onChange = {(e) => setEmail(e.target.value)}/>
-                </div>
-                <div className={"input-group"}>
-                    <label htmlFor={"password"}>Password</label>
-                    <input type="password" placeholder={"********"} value={password} id={"password"}
-                    onChange = {(e) => setPassword(e.target.value)}/>
-                </div>
-                <div className={"error-container"}>
-                    {error !== "" && <p className={"error-message"}>⚠️ {error}</p>}
-                </div>
-            <button className="login-button" type={"submit"} disabled={isSubmitting}>LOG IN</button>
-            </form>
-            <a className={"forgot-password"} href={"#"}>Forgot your Password?</a>
-        </div>
-      </main>
-  )
+    return(
+        <Routes>
+            <Route path={"/"} element={<LoginPage/>}/>
+            <Route path={"/admin"} element={<AdminPage/>}/>
+            <Route path={"/accountant"} element={<AccountantPage/>}/>
+            <Route path={"/employee"} element={<EmployeePage/>}/>
+            <Route path={"/auditor"} element={<AuditorPage/>}/>
+        </Routes>
+    )
 }
 
 export default App
